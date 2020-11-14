@@ -11,6 +11,6 @@ Memoria();
 
 Memoria::Memoria()
 {
-    memoriaReal = vector<int>(4096);
-    discoDuro = vector<pair<int,int> > (2048);
+    discoDuro = vector<int>(4096);
+    memoriaReal = vector<pair<int,int> > (2048);
 }

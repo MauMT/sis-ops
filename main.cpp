@@ -2,6 +2,11 @@
 #include "Memoria.h"
 
 using namespace std;
+
+void LRU(){}
+
+void FIFO(){}
+
 int main() {
   char inputPrimeraLetra;
   Memoria Memoria();
