@@ -4,10 +4,6 @@
 
 using namespace std;
 
-bool contains(vector<char> v1,char c1)
-{
-  return (std::find(v1.begin(), v1.end(), c1) != v1.end()); 
-}
 
 void LRU(){}
 
@@ -16,11 +12,13 @@ void FIFO(){}
 int main() {
   char inputPrimeraLetra;
   Memoria Memoria;
+  cout<<"Enter a command:\n";
   do{
+  
   cin>>inputPrimeraLetra;
   inputPrimeraLetra=toupper(inputPrimeraLetra);
-   vector<char> comandos={'P','A','L','C','F','E'};
-  if(contains(comandos,inputPrimeraLetra)){
+   
+  
   
   switch(inputPrimeraLetra)
   {
@@ -41,9 +39,12 @@ int main() {
       break;
     case 'E':
       break;
+    default:
+      cout<<"comando inválido\n";
+      break;
   }
 
-  }else{cout<<"Comando inválido\n";}
+ 
   
   }while(inputPrimeraLetra!='E');
 
