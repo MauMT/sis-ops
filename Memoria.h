@@ -4,13 +4,8 @@ using namespace std;
 
 struct Memoria{
 
-vector<int> discoDuro;
-vector<pair<int,int> > memoriaReal;
-Memoria();
+vector<int> discoDuro=vector<int>(4096);
+vector<pair<int,int> > memoriaReal=vector<pair<int,int>>(2048);
+
 };
 
-Memoria::Memoria()
-{
-    discoDuro = vector<int>(4096);
-    memoriaReal = vector<pair<int,int> > (2048);
-}
