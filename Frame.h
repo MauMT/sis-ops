@@ -1,9 +1,17 @@
+#include "Page.h"
+
 class Frame {
     bool free;
-    int process_id;
+    Page *page;
 
    public:
     Frame();
+
+    /**
+     * 
+     * @return apuntador a la pagina del frame.
+     */
+    Page *getPage();
 
     /**
      * 
@@ -18,9 +26,21 @@ class Frame {
     bool isFree();
 
     /**
-     * Asigna un proceso con id process_id al frame.
-     * 
-     * @param process_id
+     * A
      */
-    void setProcessId(int process_id);
+    void setFree(bool free = true);
+
+    /**
+     * Asigna la pagina de un proceso al frame
+     * 
+     * @param page pagina del proceso
+     */
+    void setPage(Page *page);
+
+    /**
+     * Libera el frame de la pagina;
+     * 
+     * @param page pagina del proceso
+     */
+    void setPage(Page *page);
 };

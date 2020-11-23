@@ -18,13 +18,13 @@ class Memory {
     std::vector<Frame>& getFrames();
 
     /**
-     * Asigna un proceso a un frame.
+     * Asigna una pagina de un proceso a un frame.
      * 
-     * @param process_id numero del frame a modificar.
-     * @param frame_number numero del frame a modificar.
+     * @param frame_number numero del frame a modificar (indexado desde 0).
+     * @param page apuntador a la pagina que se va a alocar.
      * @return copia del frame.
      */
-    void setFrameProcess(int process_id, int frame_number);
+    void setPageToFrame(int frame_number, Page* page);
 
     /**
      * Libera el frame numero frame_number.
