@@ -39,6 +39,7 @@ bool Page::isInMemory(){
 
 bool Page::holdsVirtualAddress(int virtual_address){
     
+    return true; // ¿cómo se prueba eso?
 }
 
 int Page::getLastUse(){

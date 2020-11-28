@@ -16,8 +16,7 @@ enum class QueryType { AccessAddressQuery,
                        ExitQuery };
 
 enum class ErrorType { InvalidID,
-                       //..
-};
+                       };
 
 class ResponseAction {
    public:

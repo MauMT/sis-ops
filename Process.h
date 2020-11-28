@@ -47,7 +47,7 @@ class Process {
 
 
 bool Process::isActive(){
-    
+    return is_active;
 }
 
 int Process::getInitTimeStamp(){
@@ -58,12 +58,6 @@ int Process::getFinishTimeStamp(){
     return end_timestamp;
 }
 
-/**
- * Regresa el tamanio en bytes del proceso.
- * 
- * @return cantidad de bytes del proceso.
- */
-
 int Process::getSize(){
     return bytes;
 }
@@ -73,5 +67,5 @@ int Process::getPageFaults(){
 }
 
 int Process::getTurnaround(){
-    return end_timestamp-init_timestamp;
+    return end_timestamp - init_timestamp;
 }
