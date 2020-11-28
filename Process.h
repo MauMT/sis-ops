@@ -33,7 +33,7 @@ class Process {
 
     int getTurnaround();
 
-    void incrementPageFaults();
+    void incrementPageFaults(){page_faults++;};
 
     /**
      * Regresa la pagina del proceso donde se encuentra su direccion virtual virtual_address.
@@ -44,3 +44,34 @@ class Process {
      */
     Page* getPageByVirtualAddress(int virtual_address);
 };
+
+
+bool Process::isActive(){
+    
+}
+
+int Process::getInitTimeStamp(){
+    return init_timestamp;
+}
+
+int Process::getFinishTimeStamp(){
+    return end_timestamp;
+}
+
+/**
+ * Regresa el tamanio en bytes del proceso.
+ * 
+ * @return cantidad de bytes del proceso.
+ */
+
+int Process::getSize(){
+    return bytes;
+}
+
+int Process::getPageFaults(){
+    return page_faults;
+}
+
+int Process::getTurnaround(){
+    return end_timestamp-init_timestamp;
+}
