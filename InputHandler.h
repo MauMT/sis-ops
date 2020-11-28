@@ -11,7 +11,7 @@ class InputHandler {
 
    public:
     InputHandler(Processor* processor);
-    ResponseAction parse(std::string line);
+    ResponseAction* parse(std::string line);
     friend void lTrim(std::string &s);
     friend void firstCharDel(std::string &s);
     friend void rTrim(std::string &s);
@@ -36,7 +36,7 @@ void firstCharDel(std::string &s){
   lTrim(s);
 }
 
-ResponseAction InputHandler::parse(std::string line){
+ResponseAction* InputHandler::parse(std::string line){
     std::stringstream ss;
     lTrim(line);
     char commandSymbol=line[0];
@@ -54,44 +54,45 @@ ResponseAction InputHandler::parse(std::string line){
             ss>>input_n>>input_process_id;
             if(ss.fail())
             {
-                return new ResponseActionType::Error("syntax error");
+                return new Error("syntax error");
             }
-            return ResponseActionType::AllocateProcessQuery;
+            return new AllocateProcessQuery(input_process_id, input_n);
             break;
+
         case 'a': case 'A':
             ss<<line;
             ss>>input_direccion_virtual>>input_process_id>>input_m;
             if(ss.fail())
             {
-                return ResponseActionType::Error;
+                return new Error("syntax error");
             }
-            return ResponseActionType::AccessAddressQuery;
+            return new AccessAddressQuery(input_process_id,input_direccion_virtual,input_m);
             break;
         case 'l': case 'L':
             ss<<line;
             ss>>input_process_id;
             if(ss.fail())
             {
-                return ResponseActionType::Error;
+                return new Error("syntax error");
             }
-            return ResponseActionType::DeallocateProcessQuery;
+            return new DeallocateProcessQuery(input_process_id);
             break;
         
         case 'c': case 'C':
-            std::cout<<"C\n"<<line<<std::endl;
-            return ResponseActionType::CommentQuery; 
+            //std::cout<<"C\n"<<line<<std::endl;
+            return new CommentQuery(line);
             break;
         
         case 'f': case 'F':
-            return ResponseActionType::FinishQuery;
+            return new FinishQuery();
         
         case 'e': case 'E':
-            return ResponseActionType::ExitQuery; 
+            return new ExitQuery();
             break;
 
         default:
-            return ResponseActionType::Error;
+            return new Error("unknown command");
             break;
     }
-   return ResponseActionType::Error; //qué regresar?🤔
+   return new Error("syntax error"); //qué regresar?🤔
 }
