@@ -14,7 +14,7 @@ class InputHandler {
     ResponseAction parse(std::string line);
     friend void lTrim(std::string &s);
     friend void firstCharDel(std::string &s);
-    friend void rTrim(std::string &s):
+    friend void rTrim(std::string &s);
 };
 
 void lTrim(std::string &s){
@@ -54,7 +54,7 @@ ResponseAction InputHandler::parse(std::string line){
             ss>>input_n>>input_process_id;
             if(ss.fail())
             {
-                return ResponseActionType::Error;
+                return new ResponseActionType::Error("syntax error");
             }
             return ResponseActionType::AllocateProcessQuery;
             break;
@@ -88,7 +88,7 @@ ResponseAction InputHandler::parse(std::string line){
         case 'e': case 'E':
             return ResponseActionType::ExitQuery; 
             break;
-        
+
         default:
             return ResponseActionType::Error;
             break;
