@@ -8,22 +8,24 @@ enum class ResponseActionType { AccessAddressQuery,
                                 ExitQuery,
                                 Error };
 
-enum class QueryType { AccessAddressQuery,
-                       AllocateProcessQuery,
-                       DeallocateProcessQuery,
-                       CommentQuery,
-                       FinishQuery,
-                       ExitQuery };
+// TODO: Separar ResponseActions en Query y Error si hay muchos tipos de error
+// enum class QueryType { AccessAddressQuery,
+//                        AllocateProcessQuery,
+//                        DeallocateProcessQuery,
+//                        CommentQuery,
+//                        FinishQuery,
+//                        ExitQuery };
 
-enum class ErrorType { InvalidID,
-                       //..
-};
+// enum class ErrorType { InvalidID,
+//                        //..
+// };
 
 class ResponseAction {
    public:
-    ResponseAction(ResponseActionType type);
-
     ResponseActionType type;
+
+    ResponseAction(ResponseActionType type);
+    virtual ~ResponseAction() = 0;
 };
 
 class Query : public ResponseAction {
@@ -31,42 +33,52 @@ class Query : public ResponseAction {
     Query();
 };
 
-class AllocateProcessQuery : public Query {
+class AllocateProcessQuery : public ResponseAction {
+   public:
     int process_id;
     int bytes;
 
-   public:
     AllocateProcessQuery(int process_id, int bytes);
 };
 
-class DeallocateProcessQuery : public Query {
+class DeallocateProcessQuery : public ResponseAction {
+   public:
     int process_id;
 
-   public:
     DeallocateProcessQuery(int process_id);
 };
 
-class AccessAddressQuery : public Query {
+class AccessAddressQuery : public ResponseAction {
+   public:
     int process_id;
     int virtual_address;
     bool modify;
 
-   public:
     AccessAddressQuery(int process_id, int virtual_address, bool modify);
 };
 
-class CommentQuery : public Query {
+class CommentQuery : public ResponseAction {
+   public:
     std::string comment;
 
-   public:
     CommentQuery(std::string comment);
     void print();
 };
 
+class FinishQuery : public ResponseAction {
+   public:
+    FinishQuery();
+};
+
+class ExitQuery : public ResponseAction {
+   public:
+    ExitQuery();
+};
+
 class Error : public ResponseAction {
+   public:
     std::string message;
 
-   public:
     Error(std::string message);
     void print();
 };
