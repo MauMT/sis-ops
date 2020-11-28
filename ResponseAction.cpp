@@ -45,4 +45,4 @@ Error::Error(std::string message) : ResponseAction(ResponseActionType::Error) {
 
 void Error::print() {
     std::cout << "Error: " << message << endl;
-} 
+}
