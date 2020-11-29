@@ -17,6 +17,14 @@ class Memory {
      */
     std::vector<Frame>& getFrames();
 
+    
+    /**
+     *  Regresa el primer número de marco de página que esta disponible.
+     * 
+     * @return índice del marco en el vector frames, o -1 si no se encontró.
+     */
+    int getFreeFrameIndex();
+
     /**
      * Asigna una pagina de un proceso a un frame.
      * 

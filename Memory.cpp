@@ -17,10 +17,21 @@ std::vector<Frame>& Memory::getFrames() {
 void Memory::setPageToFrame(int frame_number, Page* page) {
     if (frames[frame_number].isFree()) {
         frames[frame_number].setPage(page);
+        page->setFrameNumber(frame_number);
         free_frames--;
     }
 
     // TODO: Validar fuera de funcion o arrojar error
+}
+
+int Memory::getFreeFrameIndex() {
+    for (int i = 0; i < frames.size(); i++) {
+        if (frames[i].isFree()) {
+            return i;
+        }
+    }
+
+    return -1;
 }
 
 void Memory::freeFrame(int frame_number) {
