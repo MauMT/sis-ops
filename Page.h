@@ -2,8 +2,8 @@
 class Page {
     static const int page_size = 16;
     bool in_memory;
-    int frame_number; //era real_address_start
-    int page_number; // era virtual_address_start
+    int frame_number;  //era real_address_start
+    int page_number;   // era virtual_address_start
     int swap_address;
     int process_id;
     int last_use;
@@ -15,7 +15,9 @@ class Page {
     int getLastUse();
     int getProcessId();
     int getVirtualAddressStart();
-    int getRealAddressStart();
+    int getFrameNumber();
+    void setInMemory(bool);
+    void setFrameNumber(int);
     void setProcessId(int);
 
     /**
@@ -28,36 +30,43 @@ class Page {
     bool holdsVirtualAddress(int virtual_address);
 };
 
-Page::Page(int process_id, int page_number){
-    this->process_id=process_id;
-    this->page_number=page_number;
+Page::Page(int process_id, int page_number) {
+    this->process_id = process_id;
+    this->page_number = page_number;
 }
 
-bool Page::isInMemory(){
+bool Page::isInMemory() {
     return in_memory;
 }
 
-bool Page::holdsVirtualAddress(int virtual_address){
-    
-    return true; // ¿cómo se prueba eso?
+bool Page::holdsVirtualAddress(int virtual_address) {
+    return (virtual_address >= page_size * page_number && virtual_address < page_size * (page_number + 1));
 }
 
-int Page::getLastUse(){
+int Page::getLastUse() {
     return last_use;
 }
 
-int Page::getProcessId(){
+int Page::getProcessId() {
     return process_id;
 }
 
-void Page::setProcessId(int process_id){
-    this->process_id=process_id;
+void Page::setProcessId(int process_id) {
+    this->process_id = process_id;
 }
 
-int Page::getVirtualAddressStart(){
+int Page::getVirtualAddressStart() {
     return page_number;
 }
 
-int Page::getRealAddressStart(){
+int Page::getFrameNumber() {
     return frame_number;
+}
+
+void Page::setFrameNumber(int frame_number) {
+    this->frame_number = frame_number;
+}
+
+void Page::setInMemory(bool in_memory) {
+    this->in_memory = in_memory;
 }

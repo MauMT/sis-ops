@@ -2,10 +2,18 @@
 
 class Frame {
     bool free;
+    int allocation_time;
     Page *page;
 
    public:
     Frame();
+
+
+    /**
+     * 
+     * @return el tiempo en el que se asignó una página al frame.
+     */ 
+    int getAllocationTime();
 
     /**
      * 
@@ -24,6 +32,13 @@ class Frame {
      * @return si el frame esta libre (no tiene asignado un proceso).
      */
     bool isFree();
+
+    /**
+     * Asigna el tiempo en el que se asignó una página al frame.
+     * 
+     * @param timestamp el tiempo de asignación.
+     */ 
+    void setAllocationTime(int timestamp);
 
     /**
      * Asigna la pagina de un proceso al frame

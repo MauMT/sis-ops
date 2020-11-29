@@ -8,6 +8,11 @@ class SwapArea {
     SwapArea();
 
     /**
+     * @return referencia al vector de páginas del swap area.
+     */
+    std::vector<Page *> &getPages();
+
+    /**
      * Inserta una pagina al swap area.
      * 
      * @param page apuntador a la pagina a insertar.
@@ -34,6 +39,10 @@ class SwapArea {
 
 SwapArea::SwapArea() {
     pages = std::vector<Page *>(0);
+}
+
+std::vector<Page *> &SwapArea::getPages() {
+    return pages;
 }
 
 void SwapArea::insertPage(Page *page) {
@@ -69,6 +78,7 @@ void SwapArea::removePage(Page *page) {
     for (int i = 0; i < pages.size(); i++) {
         if (pages[i] == temp) {
             pages.erase(pages.begin() + i);
+            break;
         }
     }
 }
