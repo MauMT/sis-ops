@@ -26,11 +26,6 @@ class Frame {
     bool isFree();
 
     /**
-     * A
-     */
-    void setFree(bool free = true);
-
-    /**
      * Asigna la pagina de un proceso al frame
      * 
      * @param page pagina del proceso
@@ -40,7 +35,7 @@ class Frame {
     /**
      * Libera el frame de la pagina;
      * 
-     * @param page pagina del proceso
+     *
      */
-    void setPage(Page *page);
+    void setFree(bool free = true);
 };

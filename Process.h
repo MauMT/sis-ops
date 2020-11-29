@@ -42,7 +42,7 @@ class Process {
      * @return apuntador a la pagina del proceso donde se encuentra la direccion virtual.
      * nullptr si no se encontro.
      */
-    Page* getPageByVirtualAddress(int virtual_address);
+    Page *getPageByVirtualAddress(int virtual_address);
 };
 
 Process::Process(int id, int bytes, int init_timestamp){
@@ -52,11 +52,18 @@ Process::Process(int id, int bytes, int init_timestamp){
 }
 
 Page *Process::getPageByVirtualAddress(int virtual_address){
-    virtual_address/=16;
-    for(Page page:pages)
-    {
-        if()
+    
+     for (Page page : pages) {
+        // Encuentra y regresa la pagina si el virtual address esta en el rango correcto.
+        if (virtual_address >= page.getVirtualAddressStart() && virtual_address < page.getVirtualAddressStart() + 16) {
+            return page;
+        }
     }
+    return nullptr;
+}
+
+std::vector<Page>& getPages(){
+    return pages;
 }
 
 bool Process::isActive(){
@@ -71,12 +78,6 @@ int Process::getFinishTimeStamp(){
     return end_timestamp;
 }
 
-/**
- * Regresa el tamanio en bytes del proceso.
- * 
- * @return cantidad de bytes del proceso.
- */
-
 int Process::getSize(){
     return bytes;
 }
@@ -86,5 +87,5 @@ int Process::getPageFaults(){
 }
 
 int Process::getTurnaround(){
-    return end_timestamp-init_timestamp;
+    return end_timestamp - init_timestamp;
 }
