@@ -45,6 +45,19 @@ class Process {
     Page* getPageByVirtualAddress(int virtual_address);
 };
 
+Process::Process(int id, int bytes, int init_timestamp){
+    this->id=id;
+    this->bytes=bytes;
+    this->init_timestamp=init_timestamp;
+}
+
+Page *Process::getPageByVirtualAddress(int virtual_address){
+    virtual_address/=16;
+    for(Page page:pages)
+    {
+        if()
+    }
+}
 
 bool Process::isActive(){
     return is_active;
