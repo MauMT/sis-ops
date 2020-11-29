@@ -17,6 +17,13 @@ class Page {
     int getVirtualAddressStart();
     int getFrameNumber();
     void setInMemory(bool);
+
+    /**
+     * Modifica el tiempo en el que se usó la página por última vez.
+     * 
+     *  @param timestamp el nuevo tiempo de último uso.
+     */
+    void setLastUse(int timestamp);
     void setFrameNumber(int);
     void setProcessId(int);
 
@@ -57,6 +64,10 @@ void Page::setProcessId(int process_id) {
 
 int Page::getVirtualAddressStart() {
     return page_number;
+}
+
+void Page::setLastUse(int timestamp) {
+    this->last_use = timestamp;
 }
 
 int Page::getFrameNumber() {
