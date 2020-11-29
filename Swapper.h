@@ -7,18 +7,37 @@ class Swapper {
     SwapArea* swap_area;
 
    public:
-    Swapper(Memory* nemory, SwapArea* swap_area);
-    virtual void swap(Page* page);
+    Swapper(Memory* memory, SwapArea* swap_area);
+    /**
+     * Saca una página del swap area y la inserta en la memoria real. Asume que ya
+     * hay frames libres en la memoria real para insertar la página.
+     * 
+     * @param page la página que va a salir del swap area.
+     */
+    void swapIn(Page* page);
+    virtual Page* swapOut() = 0;
 };
 
 class FIFOSwapper : public Swapper {
    public:
-    FIFOSwapper(Memory* nemory, SwapArea* swap_area);
-    void swap(Page* page);
+    FIFOSwapper(Memory* memory, SwapArea* swap_area);
+    /**
+     * Inserta una página de la memoria real en el swap area de acuerdo a la
+     * política First In First Out.
+     * 
+     * @return apuntador a la página que entró en el swap area.
+     */
+    Page* swapOut();
 };
 
 class LRUSwapper : public Swapper {
    public:
-    LRUSwapper(Memory* nemory, SwapArea* swap_area);
-    void swap(Page* page);
+    LRUSwapper(Memory* memory, SwapArea* swap_area);
+    /**
+     * Inserta una página de la memoria real en el swap area de acuerdo a la
+     * política Least Recently Used.
+     * 
+     * @return apuntador a la página que entró en el swap area.
+     */
+    Page* swapOut();
 };
