@@ -1,6 +1,5 @@
 // TODO: documentar
 class Page {
-    static const int page_size = 16;
     bool in_memory;
     int frame_number;  //era real_address_start
     int page_number;   // era virtual_address_start
@@ -35,6 +34,8 @@ class Page {
      * @return si la direccion virtual esta en la pagina.
      */
     bool holdsVirtualAddress(int virtual_address);
+
+    static const int page_size = 16;
 };
 
 Page::Page(int process_id, int page_number) {

@@ -5,9 +5,9 @@
 using namespace std;
 
 Memory::Memory(int size) {
-    this->size = size;
-    free_frames = size;
-    frames = vector<Frame>(size);
+    this->size = size / Page::page_size;
+    free_frames = this->size;
+    frames = vector<Frame>(this->size);
 }
 
 std::vector<Frame>& Memory::getFrames() {
