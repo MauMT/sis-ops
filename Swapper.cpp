@@ -35,7 +35,7 @@ Page* FIFOSwapper::swapOut() {
             first_inserted_time = curr_alloc_time;
         }
     }
-    
+
     Page* swapped_page = frames[first_inserted_frame].getPage();
     memory->freeFrame(swapped_page->getFrameNumber());
 
@@ -45,4 +45,23 @@ Page* FIFOSwapper::swapOut() {
 LRUSwapper::LRUSwapper(Memory* memory, SwapArea* swap_area) : Swapper(memory, swap_area) {}
 
 Page* LRUSwapper::swapOut() {
+    vector<Frame>& frames = memory->getFrames();
+    int least_used_frame, least_used_time;
+
+    // Itera por los frames de memoria para buscar la página que se usó
+    for (int i = 0; i < frames.size(); i++) {
+        if (frames[i].isFree()) continue;
+        int curr_last_use = frames[i].getPage()->getLastUse();
+
+        // Si no se ha registrado un frame o el frame se usó antes que el frame registrado
+        if (i == 0 || curr_last_use < least_used_time) {
+            least_used_frame = i;
+            least_used_time = curr_last_use;
+        }
+    }
+
+    Page* swapped_page = frames[least_used_frame].getPage();
+    memory->freeFrame(swapped_page->getFrameNumber());
+
+    return swapped_page;
 }

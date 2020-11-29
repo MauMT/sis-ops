@@ -9,7 +9,7 @@ class Swapper {
    public:
     Swapper(Memory* memory, SwapArea* swap_area);
     /**
-     * Saca una página del swap area y la inserta en la memoria real. Asume que ya
+     * Saca una página del swap area y la inserta en la memoria real. Asume que ya 
      * hay frames libres en la memoria real para insertar la página.
      * 
      * @param page la página que va a salir del swap area.
@@ -22,7 +22,7 @@ class FIFOSwapper : public Swapper {
    public:
     FIFOSwapper(Memory* memory, SwapArea* swap_area);
     /**
-     * Inserta una página de la memoria real en el swap area de acuerdo a la
+     * Inserta una página de la memoria real en el swap area de acuerdo a la 
      * política First In First Out.
      * 
      * @return apuntador a la página que entró en el swap area.
@@ -34,7 +34,7 @@ class LRUSwapper : public Swapper {
    public:
     LRUSwapper(Memory* memory, SwapArea* swap_area);
     /**
-     * Inserta una página de la memoria real en el swap area de acuerdo a la
+     * Inserta una página de la memoria real en el swap area de acuerdo a la 
      * política Least Recently Used.
      * 
      * @return apuntador a la página que entró en el swap area.
