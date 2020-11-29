@@ -42,9 +42,29 @@ class Process {
      * @return apuntador a la pagina del proceso donde se encuentra la direccion virtual.
      * nullptr si no se encontro.
      */
-    Page* getPageByVirtualAddress(int virtual_address);
+    Page *getPageByVirtualAddress(int virtual_address);
 };
 
+Process::Process(int id, int bytes, int init_timestamp){
+    this->id=id;
+    this->bytes=bytes;
+    this->init_timestamp=init_timestamp;
+}
+
+Page *Process::getPageByVirtualAddress(int virtual_address){
+    
+     for (Page page : pages) {
+        // Encuentra y regresa la pagina si el virtual address esta en el rango correcto.
+        if (virtual_address >= page.getVirtualAddressStart() && virtual_address < page.getVirtualAddressStart() + 16) {
+            return &page;
+        }
+    }
+    return nullptr;
+}
+
+std::vector<Page>& Process::getPages(){
+    return pages;
+}
 
 bool Process::isActive(){
     return is_active;
