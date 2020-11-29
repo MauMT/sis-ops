@@ -47,7 +47,7 @@ class Process {
 
 
 bool Process::isActive(){
-    
+    return is_active;
 }
 
 int Process::getInitTimeStamp(){

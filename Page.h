@@ -17,7 +17,9 @@ class Page {
     int getVirtualAddressStart();
     int getRealAddressStart();
     void setProcessId(int);
-
+    void setLastUse(int);
+    void setVirtualAddressStart(int);
+    void setRealAddressStart(int);
     /**
      * Regresa si la pagina contiene la direccion virtual virtual_address del
      * proceso
@@ -38,11 +40,15 @@ bool Page::isInMemory(){
 }
 
 bool Page::holdsVirtualAddress(int virtual_address){
-    
+    return virtual_address<page_number + 16 && virtual_address >= page_number;
 }
 
 int Page::getLastUse(){
     return last_use;
+}
+
+void Page::setLastUse(int last_use){
+    this->last_use=last_use;
 }
 
 int Page::getProcessId(){
@@ -55,6 +61,14 @@ void Page::setProcessId(int process_id){
 
 int Page::getVirtualAddressStart(){
     return page_number;
+}
+
+void Page::setVirtualAddressStart(int virtual_address_start){
+    page_number=virtual_address_start;
+}
+
+void Page::setRealAddressStart(int real_Address_start){
+    frame_number=real_Address_start;
 }
 
 int Page::getRealAddressStart(){
