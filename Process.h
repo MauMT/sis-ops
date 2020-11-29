@@ -56,13 +56,13 @@ Page *Process::getPageByVirtualAddress(int virtual_address){
      for (Page page : pages) {
         // Encuentra y regresa la pagina si el virtual address esta en el rango correcto.
         if (virtual_address >= page.getVirtualAddressStart() && virtual_address < page.getVirtualAddressStart() + 16) {
-            return page;
+            return &page;
         }
     }
     return nullptr;
 }
 
-std::vector<Page>& getPages(){
+std::vector<Page>& Process::getPages(){
     return pages;
 }
 
