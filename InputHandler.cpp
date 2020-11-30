@@ -25,30 +25,14 @@ void firstCharDel(std::string &s) {
     lTrim(s);
 }
 
-InputHandler::InputHandler(Processor* processor) {
+InputHandler::InputHandler(Processor *processor) {
     this->processor = processor;
-    current_file = new ifstream();
 }
 
 InputHandler::~InputHandler() {
-    current_file->close();
-    delete current_file;
 }
 
-void InputHandler::loadFile(string filename) {
-    current_file->open(filename);
-}
-
-bool InputHandler::isReading() {
-    return current_file->eof();
-}
-
-ResponseAction *InputHandler::readNextLine() {
-    string line;
-    getline(current_file, line);
-    return parse(line);
-}
-
+//TODO: validación de comandos (e.g. asegurar que un id de proceso exista, accesar direcciones que existan, etc.)
 ResponseAction *InputHandler::parse(std::string line) {
     std::stringstream ss;
     lTrim(line);
