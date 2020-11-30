@@ -15,6 +15,12 @@ class Swapper {
      * @param page la página que va a salir del swap area.
      */
     void swapIn(Page* page);
+    /**
+     * Inserta una página de la memoria real en el swap area de acuerdo a la 
+     * política de la instancia.
+     * 
+     * @return apuntador a la página que entró en el swap area.
+     */
     virtual Page* swapOut() = 0;
 };
 
