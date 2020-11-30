@@ -17,12 +17,14 @@ class InputHandler {
     friend void rTrim(std::string &s);
 };
 
+//función que borra todos los espacios vacíos antes de alguno de los caracteres de los comandos
 void lTrim(std::string &s){
   auto pos = s.find_first_not_of(' ');
   if(s.size()>1)
     s=s.substr(pos);
 }
 
+//función que borra todos los espacios vacíos después del último caracter alfanumérico de un comando
 void rTrim(std::string &s){
   auto pos = s.find_last_not_of(' ');
   //lTrim(s);
@@ -30,6 +32,7 @@ void rTrim(std::string &s){
     s=s.substr(0,pos+1);
 }
 
+//función que elimina los espacios vacío y el primer caracter del comando, deja a los valores enteros listos para ser leídos
 void firstCharDel(std::string &s){
   if(s.size()>1)
     s=s.substr(1);
@@ -39,7 +42,7 @@ void firstCharDel(std::string &s){
 ResponseAction* InputHandler::parse(std::string line){
     std::stringstream ss;
     lTrim(line);
-    char commandSymbol=line[0];
+    char commandSymbol=line[0]; //se extrae el primer caracter no vacío que representa al comando
     firstCharDel(line);
    
     int input_process_id;
@@ -49,17 +52,17 @@ ResponseAction* InputHandler::parse(std::string line){
     
     switch(commandSymbol)
     {
-        case 'p': case 'P':
+        case 'p': case 'P': //allocate process command
             ss<<line;
             ss>>input_n>>input_process_id;
-            if(ss.fail())
+            if(ss.fail()) //ss.fail() es una función de sstream que verifica que el type coincida con el de la declaración
             {
                 return new Error("syntax error");
             }
             return new AllocateProcessQuery(input_process_id, input_n);
             break;
 
-        case 'a': case 'A':
+        case 'a': case 'A': //access memory address command
             ss<<line;
             ss>>input_direccion_virtual>>input_process_id>>input_m;
             if(ss.fail())
@@ -68,7 +71,7 @@ ResponseAction* InputHandler::parse(std::string line){
             }
             return new AccessAddressQuery(input_process_id,input_direccion_virtual,input_m);
             break;
-        case 'l': case 'L':
+        case 'l': case 'L': //deallocate process command
             ss<<line;
             ss>>input_process_id;
             if(ss.fail())
@@ -78,21 +81,21 @@ ResponseAction* InputHandler::parse(std::string line){
             return new DeallocateProcessQuery(input_process_id);
             break;
         
-        case 'c': case 'C':
-            //std::cout<<"C\n"<<line<<std::endl;
+        case 'c': case 'C': //comment command
+            //std::cout<<"C\n"<<line<<std::endl; se podría imprimir el comentario desde acá
             return new CommentQuery(line);
             break;
         
-        case 'f': case 'F':
+        case 'f': case 'F': //finish command sequence command
             return new FinishQuery();
         
-        case 'e': case 'E':
+        case 'e': case 'E': //exit program command
             return new ExitQuery();
             break;
 
         default:
-            return new Error("unknown command");
+            return new Error("unknown command"); //si el primer caracter no coincide con nada entonces no es un comando
             break;
     }
-   return new Error("syntax error"); //qué regresar?🤔
+   return new Error("syntax error"); //return necesario para evitar warning
 }

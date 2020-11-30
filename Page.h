@@ -10,11 +10,35 @@ class Page {
    public:
     Page(int process_id, int page_number);  // virtual_address_start se calcula con page_number
 
+    /**
+     * @return si la página está en memoria o no
+     */
     bool isInMemory();
+
+    /**
+     * @return el valor del último uso de la página
+     */
     int getLastUse();
+
+    /**
+     * @return el process id del proceso en la página
+     */
     int getProcessId();
+
+    /**
+     * @return el valor del inicio de la dirección vitual (page_number)
+     */
     int getVirtualAddressStart();
+    
+    /**
+     * @return el inicio de la dirección real (frame_number)
+     */
     int getFrameNumber();
+    
+    /**
+     * 
+     * Modifica el valor de si la página está en memoria
+     */
     void setInMemory(bool);
 
     /**
@@ -23,8 +47,18 @@ class Page {
      *  @param timestamp el nuevo tiempo de último uso.
      */
     void setLastUse(int timestamp);
-    void setFrameNumber(int);
-    void setProcessId(int);
+    
+    /**
+     * Modifica el nuevo inicio de la dirección real (frame_number)
+     * @param frame_numer el inicio de la dirección real
+     */
+    void setFrameNumber(int fram_number);
+    
+    /**
+     * Modifica el process id
+     * @param process_id el nuevo process id
+     */
+    void setProcessId(int process_id);
 
     /**
      * Regresa si la pagina contiene la direccion virtual virtual_address del
@@ -48,6 +82,7 @@ bool Page::isInMemory() {
 }
 
 bool Page::holdsVirtualAddress(int virtual_address) {
+    //revisa que la virtual address esté en el rango de esta página
     return (virtual_address >= page_size * page_number && virtual_address < page_size * (page_number + 1));
 }
 
