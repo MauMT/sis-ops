@@ -19,6 +19,7 @@ class Processor {
    public:
     Processor();
     ~Processor();
+    void exec(string filename);
     void accessAddress(AccessAddressQuery query);
     void allocateProcess(AllocateProcessQuery query);
     void deallocateProcess(DeallocateProcessQuery query);
