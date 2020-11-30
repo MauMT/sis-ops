@@ -14,12 +14,28 @@ class Process {
    public:
     Process(int id, int bytes, int init_timestamp);
 
+    /**
+     * Regresa un vector de páginas en el que está el proceso
+     * @return vector de páginas del proceso
+     */
     std::vector<Page>& getPages();
 
+    /**
+     * DRegresa si un proceso esta o no activo
+     * @return estado del proceso
+     */
     bool isActive();
 
+    /**
+     * Regresa el valor del timestamp al inicio del proceso
+     * @return timestamp al inicio del proceso 
+     */
     int getInitTimeStamp();
 
+    /**
+     * Regresa el valor del timestamp al final del proceso
+     * @return timestamp al final del proceso
+     */
     int getFinishTimeStamp();
 
     /**
@@ -29,10 +45,21 @@ class Process {
      */
     int getSize();
 
+    /**
+     * Regresa el número de page faults del proceso
+     * @return número de page faults
+     */
     int getPageFaults();
 
+    /**
+     * Calcula el turnaround time del proceso
+     * @return turnaround time
+     */
     int getTurnaround();
 
+    /**
+     * Incrementa en 1 el número de page faults del proceso
+     */
     void incrementPageFaults(){page_faults++;};
 
     /**
