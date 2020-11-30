@@ -2,6 +2,8 @@
 
 #include <vector>
 
+#include "Clock.h"
+
 using namespace std;
 
 Memory::Memory(int size) {
@@ -17,6 +19,8 @@ std::vector<Frame>& Memory::getFrames() {
 void Memory::setPageToFrame(int frame_number, Page* page) {
     if (frames[frame_number].isFree()) {
         frames[frame_number].setPage(page);
+        frames[frame_number].setAllocationTime(clock);
+        page->setLastUse(clock);
         page->setFrameNumber(frame_number);
         free_frames--;
     }

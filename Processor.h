@@ -12,7 +12,6 @@ class Processor {
     Memory memory;
     SwapArea swap_area;
     Swapper *swapper;
-    int clock;
     int swap_in_count;
     int swap_out_count;
     InputHandler input_handler;
