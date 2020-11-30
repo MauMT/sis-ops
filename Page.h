@@ -26,10 +26,15 @@ class Page {
     int getProcessId();
 
     /**
-     * @return el valor del inicio de la dirección vitual (page_number)
+     * @return el valor del inicio de la dirección vitual
      */
     int getVirtualAddressStart();
     
+    /**
+     * @return el valor de page_number
+     */
+    int getPageNumber();
+
     /**
      * @return el inicio de la dirección real (frame_number)
      */
@@ -99,6 +104,10 @@ void Page::setProcessId(int process_id) {
 }
 
 int Page::getVirtualAddressStart() {
+    return page_number*16;
+}
+
+int Page::getPageNumber(){
     return page_number;
 }
 
