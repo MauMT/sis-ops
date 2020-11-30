@@ -10,7 +10,7 @@ class InputHandler {
     Processor* processor;  // Se necesita para validar el input
 
    public:
-    InputHandler(Processor* processor);
+    InputHandler(Processor* processor = nullptr);
     ResponseAction* parse(std::string line);
     friend void lTrim(std::string &s);
     friend void firstCharDel(std::string &s);

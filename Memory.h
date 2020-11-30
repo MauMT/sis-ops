@@ -8,7 +8,7 @@ class Memory {
     std::vector<Frame> frames;
 
    public:
-    Memory(int size);
+    Memory(int size = 2048);
 
     /**
      * Regresa una referencia a los frames de la memoria.

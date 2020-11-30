@@ -4,12 +4,14 @@
 #include "Memory.h"
 #include "Process.h"
 #include "Swapper.h"
+#include "SwapArea.h"
 
 // TODO: documentar
 class Processor {
     std::map<int, Process> processes;
     Memory memory;
-    Swapper swapper;
+    SwapArea swap_area;
+    Swapper *swapper;
     int clock;
     int swap_in_count;
     int swap_out_count;
@@ -17,6 +19,7 @@ class Processor {
 
    public:
     Processor();
+    ~Processor();
     void accessAddress(AccessAddressQuery query);
     void allocateProcess(AllocateProcessQuery query);
     void deallocateProcess(DeallocateProcessQuery query);
