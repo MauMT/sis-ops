@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 
 #include "Page.h"
@@ -12,6 +14,7 @@ class Process {
     bool is_active;
 
    public:
+    Process();
     Process(int id, int bytes, int init_timestamp);
 
     /**
@@ -60,7 +63,7 @@ class Process {
     /**
      * Incrementa en 1 el número de page faults del proceso
      */
-    void incrementPageFaults(){page_faults++;};
+    void incrementPageFaults() { page_faults++; };
 
     /**
      * Regresa la pagina del proceso donde se encuentra su direccion virtual virtual_address.
@@ -69,6 +72,7 @@ class Process {
      * @return apuntador a la pagina del proceso donde se encuentra la direccion virtual.
      * nullptr si no se encontro.
      */
+<<<<<<< HEAD
     Page *getPageByVirtualAddress(int virtual_address);
 };
 
@@ -116,3 +120,7 @@ int Process::getPageFaults(){
 int Process::getTurnaround(){
     return end_timestamp - init_timestamp;
 }
+=======
+    Page* getPageByVirtualAddress(int virtual_address);
+};
+>>>>>>> 37f3b689d7495449512a5142f6b1e99e76be72e6

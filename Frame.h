@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Page.h"
 
 class Frame {
@@ -8,11 +10,10 @@ class Frame {
    public:
     Frame();
 
-
     /**
      * 
      * @return el tiempo en el que se asignó una página al frame.
-     */ 
+     */
     int getAllocationTime();
 
     /**
@@ -37,7 +38,7 @@ class Frame {
      * Asigna el tiempo en el que se asignó una página al frame.
      * 
      * @param timestamp el tiempo de asignación.
-     */ 
+     */
     void setAllocationTime(int timestamp);
 
     /**

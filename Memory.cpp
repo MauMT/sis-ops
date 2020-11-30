@@ -19,8 +19,8 @@ std::vector<Frame>& Memory::getFrames() {
 void Memory::setPageToFrame(int frame_number, Page* page) {
     if (frames[frame_number].isFree()) {
         frames[frame_number].setPage(page);
-        frames[frame_number].setAllocationTime(clock);
-        page->setLastUse(clock);
+        frames[frame_number].setAllocationTime(Clock::time);
+        page->setLastUse(Clock::time);
         page->setFrameNumber(frame_number);
         free_frames--;
     }

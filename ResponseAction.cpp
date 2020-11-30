@@ -6,7 +6,7 @@
 using namespace std;
 
 ResponseAction::ResponseAction(ResponseActionType type) {
-    type = type;
+    this->type = type;
 }
 
 ResponseAction::~ResponseAction() {

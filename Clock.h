@@ -1,4 +1,6 @@
 #pragma once
 
-extern int clock;
-
+class Clock {
+   public:
+    static int time;
+};
