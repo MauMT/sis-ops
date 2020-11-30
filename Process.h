@@ -78,9 +78,9 @@ Process::Process(int id, int bytes, int init_timestamp){
     this->init_timestamp=init_timestamp;
 }
 
-Page *Process::getPageByVirtualAddress(int virtual_address){
+Page* Process::getPageByVirtualAddress(int virtual_address){
     
-     for (Page page : pages) {
+     for (auto page : pages) {
         // Encuentra y regresa la pagina si el virtual address esta en el rango correcto.
         if (virtual_address >= page.getVirtualAddressStart() && virtual_address < page.getVirtualAddressStart() + 16) {
             return &page;

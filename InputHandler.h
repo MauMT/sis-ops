@@ -19,7 +19,7 @@ class InputHandler {
     ResponseAction *parse(std::string line);
     //función que borra todos los espacios vacíos antes de alguno de los caracteres de los comandos
     friend void lTrim(std::string &s);
-    //función que elimina los espacios vacío y el primer caracter del comando, deja a los valores enteros listos para ser leídos
+    //función que elimina los espacios vacíos y el primer caracter del comando, deja a los valores enteros listos para ser leídos
     friend void firstCharDel(std::string &s);
     //función que borra todos los espacios vacíos después del último caracter alfanumérico de un comando
     friend void rTrim(std::string &s);
