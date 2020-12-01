@@ -79,14 +79,18 @@ void Processor::accessAddress(AccessAddressQuery query) {
     // Tenemos que desplegar el comando.
     cout << "Obtener la direccion real correspondiente a la direccion virtual " << virtual_address << " del proceso " << process_id << '\n';
 
+    if (processes.find(process_id) == processes.end()) {
+        // El proceso no existe en la lista de procesos
+        cout << "ERROR: El proceso " << process_id << " no existe.\n\n";
+        return;
+    }
+
     // Ubicamos el proceso.
     Process& process = processes[process_id];
 
     if (!process.isActive()) {
         // Si ya no esta activo, nos salimos de la funcion para que no ocurran cosas extrañas.
-
-        // Error
-        std::cout << "Proceso " << process_id << " no esta activo." << '\n';
+        cout << "ERROR: El proceso " << process_id << " no esta activo.\n\n";
         return;
     }
 
@@ -105,9 +109,9 @@ void Processor::accessAddress(AccessAddressQuery query) {
         }
     }
 
-    // Si process_page_number es -1, no encontró la direccion virtual del proceso.
     if (process_page_number == -1) {
-        // Error
+        // Si process_page_number es -1, no encontró la direccion virtual del proceso.
+        cout << "ERROR: El proceso no tiene una direccion " << virtual_address << ".\n\n";
         return;
     }
 
@@ -150,11 +154,14 @@ void Processor::accessAddress(AccessAddressQuery query) {
 }
 
 void Processor::allocateProcess(AllocateProcessQuery query) {
-    cout << "Asignar " << query.bytes << " bytes al proceso " << query.process_id << endl;
+    int process_id = query.process_id;
+    int bytes = query.bytes;
+
+    cout << "Asignar " << bytes << " bytes al proceso " << process_id << endl;
 
     // Se crea el nuevo proceso especificado
-    processes[query.process_id] = Process(query.process_id, query.bytes, Clock::time);
-    Process& new_process = processes[query.process_id];
+    processes[process_id] = Process(process_id, bytes, Clock::time);
+    Process& new_process = processes[process_id];
 
     vector<Page>& pages = new_process.getPages();
     // Guarda los numeros de frames usados para desplegarlos posteriormente
@@ -171,13 +178,17 @@ void Processor::allocateProcess(AllocateProcessQuery query) {
         Clock::time += 1 * 1000;
     }
 
+    // Se construyen los rangos de marcos utilizados
+    // Se ordena la lista de numeros de marco
     sort(frames_used.begin(), frames_used.end());
-
     vector<string> ranges;
+    // Indicadores para el inicio y fin del rango que se este registrando
     int from = 0, to = 0;
     for (int i = 0; i < frames_used.size(); i++) {
+        // Si no hay dos numeros de marcos continuos, se registra el ultimo rango y se inicializa uno nuevo
         if (i != 0 && frames_used[i] != frames_used[i - 1] + 1) {
             to = i - 1;
+            // Si los limites del rango son iguales, solo se imprime un
             if (to == from)
                 ranges.push_back(to_string(frames_used[from]));
             else
@@ -199,7 +210,7 @@ void Processor::allocateProcess(AllocateProcessQuery query) {
     for (int i = 0; i < ranges.size(); i++) {
         cout << ranges[i] << (i == ranges.size() - 1 ? " " : ", ");
     }
-    cout << "al proceso " << query.process_id << endl
+    cout << "al proceso " << process_id << endl
          << endl;
 }
 
@@ -207,11 +218,18 @@ void Processor::deallocateProcess(DeallocateProcessQuery query) {
     // Guardamos el id del proceso en esta variable
     int process_id = query.process_id;
 
+    if (processes.find(process_id) == processes.end()) {
+        // El proceso no existe en la lista de procesos
+        cout << "ERROR: El proceso " << process_id << " no existe.\n\n";
+        return;
+    }
+
     // Obtenemos el proceso.
     Process& process_to_deallocate = processes[process_id];
 
-    // Revisamos que el proceso esté activo para evitar errores.
     if (!process_to_deallocate.isActive()) {
+        // Revisamos que el proceso esté activo para evitar errores.
+        cout << "ERROR: El proceso " << process_id << " ya no esta activo.\n\n";
         return;
     }
 
@@ -225,8 +243,8 @@ void Processor::deallocateProcess(DeallocateProcessQuery query) {
     // Iteramos sobre las paginas del proceso.
     // Las eliminamos dependiendo si estan en memoria o en el area de swap.
 
-    std::vector<bool> frames_deallocated(128, 0);
-    std::vector<bool> swaparea_pages_deallocated(128, 0);
+    std::vector<bool> frames_deallocated(128, false);
+    std::vector<bool> swaparea_pages_deallocated(256, false);
 
     for (Page& page : pages) {
         if (page.isInMemory()) {
@@ -237,7 +255,7 @@ void Processor::deallocateProcess(DeallocateProcessQuery query) {
         } else {
             // Esta en area de swap.
             int swap_address = page.getSwapAddress();
-            swaparea_pages_deallocated[swap_address];
+            swaparea_pages_deallocated[swap_address] = true;
             swap_area.removePage(&page);
         }
 
@@ -291,7 +309,7 @@ void Processor::deallocateProcess(DeallocateProcessQuery query) {
         std::cout << (i == frames_ranges.size() - 2 ? " y " : (i == frames_ranges.size() - 1 ? "\n" : " "));
     }
 
-    std::cout << "Se liberan los marcos ";
+    if (swaparea_pages_ranges.size() > 0) std::cout << "Se liberan los marcos ";
     for (int i = 0; i < swaparea_pages_ranges.size(); i++) {
         pair<int, int> p = swaparea_pages_ranges[i];
         if (p.first == p.second)
@@ -313,10 +331,10 @@ void Processor::reinitialize() {
     swap_out_count = 0;
 }
 
-void Processor::exit(){
-   for (auto& process : processes) { 
-   process.second.setInactive();
-   }
+void Processor::exit() {
+    for (auto& process : processes) {
+        process.second.setInactive();
+    }
 }
 
 void Processor::printStats() {
@@ -339,22 +357,17 @@ void Processor::printStats() {
     double num_processes = 0.0;
     double average_turnaround;
     for (auto& process : processes) {
-
         cout << "Turnaround time del Proceso " << process.second.getProcessId() << ": " << process.second.getTurnaround() / 1000 << "s" << endl;
         num_processes++;
         average_turnaround += process.second.getTurnaround();
     }
 
-    
-    cout << "\nTurnaround promedio: " << (average_turnaround / num_processes);
-
-    cout << "\nTurnaround promedio: " << (average_turnaround / num_processes) / 1000 << "s" << endl;
+    cout << "\nTurnaround promedio: " << (average_turnaround / num_processes) / 1000 << "s\n" << endl;
 
     for (auto& process : processes) {
         cout << "Page faults del Proceso " << process.second.getProcessId() << ": " << process.second.getPageFaults() << endl;
     }
-    cout << "Operaciones de swap in: " << swap_in_count << endl;
+    cout << "\nOperaciones de swap in: " << swap_in_count << endl;
     cout << "Operaciones de swap out: " << swap_out_count << endl;
     cout << endl;
-
 }

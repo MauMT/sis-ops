@@ -1,6 +1,5 @@
 #pragma once
 
-// TODO: documentar
 /**
  * Modelo de la página de un proceso.
  */

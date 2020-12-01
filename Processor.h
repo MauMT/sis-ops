@@ -8,7 +8,6 @@
 #include "SwapArea.h"
 #include "Swapper.h"
 
-// TODO: documentar
 /**
  * Modelo para el procesador.
  * 

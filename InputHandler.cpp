@@ -32,7 +32,6 @@ InputHandler::InputHandler(Processor *processor) {
 InputHandler::~InputHandler() {
 }
 
-//TODO: validación de comandos (e.g. asegurar que un id de proceso exista, accesar direcciones que existan, etc.)
 ResponseAction *InputHandler::parse(std::string line) {
     std::stringstream ss;
     lTrim(line);
@@ -51,7 +50,7 @@ ResponseAction *InputHandler::parse(std::string line) {
             ss >> input_n >> input_process_id;
             if (ss.fail())  //ss.fail() es una función de sstream que verifica que el type coincida con el de la declaración
             {
-                return new Error("syntax error");
+                return new Error("Entrada invalida para el comando P");
             }
             return new AllocateProcessQuery(input_process_id, input_n);
             break;
@@ -61,7 +60,7 @@ ResponseAction *InputHandler::parse(std::string line) {
             ss << line;
             ss >> input_direccion_virtual >> input_process_id >> input_m;
             if (ss.fail()) {
-                return new Error("syntax error");
+                return new Error("Entrada invalida para el comando A");
             }
             return new AccessAddressQuery(input_process_id, input_direccion_virtual, input_m);
             break;
@@ -70,28 +69,25 @@ ResponseAction *InputHandler::parse(std::string line) {
             ss << line;
             ss >> input_process_id;
             if (ss.fail()) {
-                return new Error("syntax error");
+                return new Error("Entrada invalida para el comando L");
             }
             return new DeallocateProcessQuery(input_process_id);
             break;
 
         case 'c':
         case 'C':  //comment command
-            //std::cout<<"C\n"<<line<<std::endl; se podría imprimir el comentario desde acá
             return new CommentQuery(line);
             break;
-
         case 'f':
         case 'F':  //finish command sequence command
             return new FinishQuery();
-
         case 'e':
         case 'E':  //exit program command
             return new ExitQuery();
             break;
 
         default:
-            return new Error("unknown command");  //si el primer caracter no coincide con nada entonces no es un comando
+            return new Error("Comando desconocido");  //si el primer caracter no coincide con nada entonces no es un comando
             break;
     }
     return new Error("syntax error");  //return necesario para evitar warning
