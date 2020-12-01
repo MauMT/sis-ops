@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "Clock.h"
 #include "Page.h"
 
 class Process {
@@ -28,6 +29,12 @@ class Process {
      * @return estado del proceso
      */
     bool isActive();
+
+    /**
+     * Indica que el proceso ya no está activo
+     * 
+     */
+    void setInactive();
 
     /**
      * Regresa el valor del timestamp al inicio del proceso
