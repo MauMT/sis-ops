@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <utility>
 #include <vector>
 
 #include "Clock.h"
@@ -86,6 +87,14 @@ void Processor::accessAddress(AccessAddressQuery query) {
 
     // Ubicamos el proceso.
     Process process = processes[process_id];
+
+    if (!process.isActive()) {
+        // Si ya no esta activo, nos salimos de la funcion para que no ocurran cosas extrañas.
+
+        // Error
+        std::cout << "Proceso " << process_id << " no está activo." << '\n';
+        return;
+    }
 
     // Obtenemos las paginas del proceso.
     std::vector<Page> pages = process.getPages();
@@ -186,6 +195,88 @@ void Processor::allocateProcess(AllocateProcessQuery query) {
 }
 
 void Processor::deallocateProcess(DeallocateProcessQuery query) {
+    // Guardamos el id del proceso en esta variable
+    int process_id = query.process_id;
+
+    // Obtenemos el proceso.
+    Process process_to_deallocate = processes[process_id];
+
+    // Revisamos que el proceso esté activo para evitar errores.
+    if (!process_to_deallocate.isActive()) {
+        return;
+    }
+
+    std::cout << "Liberar los marcos de página ocupados por el proceso " << process_id << '\n';
+
+    // Obtenemos todas las paginas del proceso, ya sea que esten en memoria o en el area de swap.
+    std::vector<Page> pages = process_to_deallocate.getPages();
+
+    // Iteramos sobre las paginas del proceso.
+    // Las eliminamos dependiendo si estan en memoria o en el area de swap.
+
+    std::vector<bool> frames_deallocated(128);
+    std::vector<bool> swaparea_pages_deallocated(128);
+
+    for (Page& page : pages) {
+        if (page.isInMemory()) {
+            // Esta en memoria
+            int frame_number = page.getFrameNumber();
+            frames_deallocated[frame_number] = true;
+            memory.freeFrame(frame_number);
+        } else {
+            // Esta en area de swap.
+            int swap_address = page.getSwapAddress();
+            swaparea_pages_deallocated[swap_address];
+            swap_area.removePage(&page);
+        }
+    }
+
+    std::vector<pair<int, int>> frames_ranges;
+    for (int i = 0; i < 128; i++) {
+        if (frames_deallocated[i]) {
+            int start = i, end = i;
+            for (int j = i + 1; j < 128; j++) {
+                if (!frames_deallocated[j]) {
+                    end = j - 1;
+                    break;
+                }
+            }
+            frames_ranges.push_back({start, end});
+        }
+    }
+
+    std::vector<pair<int, int>> swaparea_pages_ranges;
+    for (int i = 0; i < 256; i++) {
+        if (swaparea_pages_deallocated[i]) {
+            int start = i, end = i;
+            for (int j = i + 1; j < 256; j++) {
+                if (!swaparea_pages_deallocated[j]) {
+                    end = j - 1;
+                    break;
+                }
+            }
+            swaparea_pages_ranges.push_back({start, end});
+        }
+    }
+
+    // 'Desactivamos' el proceso.
+    // Pero se queda en el contenedor de procesos para obtener estadisticas mas adelante.
+    process_to_deallocate.setInactive();
+
+    // Desplegar los frames de la memoria y paginas del area de swap que se liberaron.
+    std::cout << "Se liberan los marcos de memoria real: ";
+    for (int i = 0; i < frames_ranges.size(); i++) {
+        pair<int, int> p = frames_ranges[i];
+        std::cout << p.first << '-' << p.second;
+        std::cout << (i == frames_ranges.size() - 2 ? " y " : (i == frames_ranges.size() - 1 ? "\n" : " "));
+    }
+
+    std::cout << "Se liberan los marcos ";
+    for (int i = 0; i < swaparea_pages_ranges.size(); i++) {
+        pair<int, int> p = swaparea_pages_ranges[i];
+        std::cout << p.first << '-' << p.second;
+        std::cout << (i == swaparea_pages_ranges.size() - 2 ? " y " : (i == swaparea_pages_ranges.size() - 1 ? " del area de swapping\n" : " "));
+    }
 }
 
 void Processor::reinitialize() {

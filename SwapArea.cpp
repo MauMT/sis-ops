@@ -18,6 +18,7 @@ void SwapArea::insertPage(Page *page) {
 
     // No esta lleno, inserta la nueva pagina.
     pages.push_back(page);
+    page->setSwapAddress(pages.size() - 1);
 }
 
 Page *SwapArea::findPage(int process_id, int virtual_address) {
