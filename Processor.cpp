@@ -220,6 +220,8 @@ void Processor::deallocateProcess(DeallocateProcessQuery query) {
     // Obtenemos todas las paginas del proceso, ya sea que esten en memoria o en el area de swap.
     std::vector<Page>& pages = process_to_deallocate.getPages();
 
+    Clock::time += 100 * pages.size();
+
     // Iteramos sobre las paginas del proceso.
     // Las eliminamos dependiendo si estan en memoria o en el area de swap.
 
@@ -311,6 +313,7 @@ void Processor::reinitialize() {
     swap_out_count = 0;
 }
 
+
 void Processor::printStats() {
     /*
     - turnaround time de cada proceso que se consideró, desde que se
@@ -331,11 +334,13 @@ void Processor::printStats() {
     double num_processes = 0.0;
     double average_turnaround;
     for (auto& process : processes) {
+
         cout << "Turnaround time del Proceso " << process.second.getProcessId() << ": " << process.second.getTurnaround() / 1000 << "s" << endl;
         num_processes++;
         average_turnaround += process.second.getTurnaround();
     }
     cout << "\nTurnaround promedio: " << (average_turnaround / num_processes) / 1000 << "s" << endl;
+
 
     for (auto& process : processes) {
         cout << "Page faults del Proceso " << process.second.getProcessId() << ": " << process.second.getPageFaults() << endl;
@@ -343,4 +348,5 @@ void Processor::printStats() {
     cout << "Operaciones de swap in: " << swap_in_count << endl;
     cout << "Operaciones de swap out: " << swap_out_count << endl;
     cout << endl;
+
 }
