@@ -1,5 +1,8 @@
 #include "Page.h"
 
+#include <iostream>
+
+using namespace std;
 Page::Page(int process_id, int page_number) {
     this->process_id = process_id;
     this->page_number = page_number;

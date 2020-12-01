@@ -1,5 +1,6 @@
 #include "Memory.h"
 
+#include <iostream>
 #include <vector>
 
 #include "Clock.h"
@@ -20,8 +21,10 @@ void Memory::setPageToFrame(int frame_number, Page* page) {
     if (frames[frame_number].isFree()) {
         frames[frame_number].setPage(page);
         frames[frame_number].setAllocationTime(Clock::time);
+
         page->setLastUse(Clock::time);
         page->setFrameNumber(frame_number);
+        page->setInMemory(true);
         free_frames--;
     }
 

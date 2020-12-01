@@ -7,7 +7,6 @@
 using namespace std;
 
 int main() {
-    Clock::time = 15;
     Processor processor;
-    processor.exec("archivop.txt");
+    processor.exec("input.txt");
 }
