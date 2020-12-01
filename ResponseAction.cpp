@@ -35,9 +35,13 @@ void CommentQuery::print() {
     std::cout << "C " << comment << endl;
 }
 
-FinishQuery::FinishQuery() : ResponseAction(ResponseActionType::FinishQuery) {}
+FinishQuery::FinishQuery() : ResponseAction(ResponseActionType::FinishQuery) {
 
-ExitQuery::ExitQuery() : ResponseAction(ResponseActionType::ExitQuery) {}
+}
+
+ExitQuery::ExitQuery() : ResponseAction(ResponseActionType::ExitQuery) {
+    
+}
 
 Error::Error(std::string message) : ResponseAction(ResponseActionType::Error) {
     this->message = message;
