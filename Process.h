@@ -5,6 +5,10 @@
 #include "Clock.h"
 #include "Page.h"
 
+/**
+ * Modela un Proceso. Mantiene control de sus pagina y metricas importantes para el procesador.
+ * Por ejemplo, id, tiempos de carga y liberacion, page faults.
+ */ 
 class Process {
     int id;
     int bytes;

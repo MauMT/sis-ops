@@ -3,6 +3,10 @@
 #include <vector>
 
 #include "Page.h"
+
+/**
+ * Modela el area de swapeo. Provee una interfaz para insertar y remover paginas de esta area.
+ */ 
 class SwapArea {
     std::vector<Page *> pages;
 

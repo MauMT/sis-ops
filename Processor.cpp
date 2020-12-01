@@ -12,8 +12,8 @@ Processor::Processor() {
     memory = Memory(2048);
     swap_area = SwapArea();
     input_handler = InputHandler(this);
-    swapper = new FIFOSwapper(&memory, &swap_area);
-    // swapper = new LRUSwapper(&memory, &swap_area);
+    // swapper = new FIFOSwapper(&memory, &swap_area);
+    swapper = new LRUSwapper(&memory, &swap_area);
     swap_in_count = 0;
     swap_out_count = 0;
 }

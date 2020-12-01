@@ -3,6 +3,13 @@
 #include "Memory.h"
 #include "SwapArea.h"
 
+
+/**
+ * (Interfaz)
+ * Implementa una politica de reeplazo. Provee funciones para sacar una pagina
+ * en el area de swapeo o introducir una desde la memoria de acuerdo a la politica
+ * implementada.
+ */
 class Swapper {
    protected:
     Memory* memory;

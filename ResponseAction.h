@@ -10,17 +10,16 @@ enum class ResponseActionType { AccessAddressQuery,
                                 ExitQuery,
                                 Error };
 
+/**
+ * Representa una accion posible que puede tomar el procesador despues de leer una linea de
+ * comando.
+ */
 class ResponseAction {
    public:
     ResponseActionType type;
 
     ResponseAction(ResponseActionType type);
     virtual ~ResponseAction() = 0;
-};
-
-class Query : public ResponseAction {
-   public:
-    Query();
 };
 
 class AllocateProcessQuery : public ResponseAction {

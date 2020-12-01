@@ -2,6 +2,9 @@
 
 #include "Page.h"
 
+/**
+ * Modela un marco de pagina de la memoria real.
+ */ 
 class Frame {
     bool free;
     int allocation_time;

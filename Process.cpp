@@ -1,5 +1,6 @@
 
 #include "Process.h"
+#include <math.h>
 
 Process::Process() {}
 
@@ -10,7 +11,7 @@ Process::Process(int id, int bytes, int init_timestamp) {
     page_faults = 0;
     is_active = true;
 
-    for (int i = 0; i < bytes / Page::page_size; i++) {
+    for (int i = 0; i < ceil(bytes / Page::page_size); i++) {
         pages.push_back(Page(id, i));
     }
 }

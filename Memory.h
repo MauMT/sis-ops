@@ -4,6 +4,9 @@
 
 #include "Frame.h"
 
+/**
+ * Modela la memoria real, mantiene control de sus marcos (provee interfaz para asignar y liberar marcos de paginas).
+ */
 class Memory {
     int size;
     int free_frames;
@@ -19,7 +22,6 @@ class Memory {
      */
     std::vector<Frame>& getFrames();
 
-    
     /**
      *  Regresa el primer número de marco de página que esta disponible.
      * 
@@ -49,5 +51,4 @@ class Memory {
      * @return el numero de frames.
      */
     int getFreeFrames();
-
 };
