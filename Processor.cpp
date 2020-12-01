@@ -346,7 +346,7 @@ void Processor::printStats() {
     }
 
     
-    cout << "\nTurnaround promedio: " << (average_turnaround / num_processes);
+    //cout << "\nTurnaround promedio: " << (average_turnaround / num_processes);
 
     cout << "\nTurnaround promedio: " << (average_turnaround / num_processes) / 1000 << "s" << endl;
 
