@@ -55,6 +55,7 @@ int Process::getPageFaults() {
 }
 
 int Process::getTurnaround() {
+    if (is_active) return Clock::time - init_timestamp;
     return end_timestamp - init_timestamp;
 }
 

@@ -10,13 +10,14 @@ Swapper::Swapper(Memory* memory, SwapArea* swap_area) {
 }
 
 void Swapper::swapIn(Page* page) {
+    int swap_number = page->getSwapAddress();
     swap_area->removePage(page);
     int frame_number = memory->getFreeFrameIndex();
     if (frame_number != -1) {
         memory->setPageToFrame(frame_number, page);
+        cout << "Se localizo pagina " << page->getPageNumber() << " del proceso " << page->getProcessId() << " en el marco "
+             << swap_number << " del area de swapping y se cargo al marco " << frame_number << " de la memoria real.\n";
     }
-
-    // TODO: error handling si no se encontró la página
 }
 
 FIFOSwapper::FIFOSwapper(Memory* memory, SwapArea* swap_area) : Swapper(memory, swap_area) {}

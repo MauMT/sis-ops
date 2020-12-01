@@ -27,8 +27,6 @@ void Memory::setPageToFrame(int frame_number, Page* page) {
         page->setInMemory(true);
         free_frames--;
     }
-
-    // TODO: Validar fuera de funcion o arrojar error
 }
 
 int Memory::getFreeFrameIndex() {
@@ -46,8 +44,6 @@ void Memory::freeFrame(int frame_number) {
         frames[frame_number].setFree();
         free_frames++;
     }
-
-    // TODO: Validar fuera de funcion o arrojar error
 }
 
 int Memory::getFreeFrames() {

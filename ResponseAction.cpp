@@ -32,7 +32,7 @@ CommentQuery::CommentQuery(std::string comment) : ResponseAction(ResponseActionT
 }
 
 void CommentQuery::print() {
-    std::cout << "C " << comment << endl;
+    std::cout << "C " << comment << endl << endl;
 }
 
 FinishQuery::FinishQuery() : ResponseAction(ResponseActionType::FinishQuery) {
@@ -48,5 +48,5 @@ Error::Error(std::string message) : ResponseAction(ResponseActionType::Error) {
 }
 
 void Error::print() {
-    std::cout << "Error: " << message << endl;
+    std::cout << "Error: " << message << endl << endl;
 }

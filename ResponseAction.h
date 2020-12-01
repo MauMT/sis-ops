@@ -10,18 +10,6 @@ enum class ResponseActionType { AccessAddressQuery,
                                 ExitQuery,
                                 Error };
 
-// TODO: Separar ResponseActions en Query y Error si hay muchos tipos de error
-// enum class QueryType { AccessAddressQuery,
-//                        AllocateProcessQuery,
-//                        DeallocateProcessQuery,
-//                        CommentQuery,
-//                        FinishQuery,
-//                        ExitQuery };
-
-// enum class ErrorType { InvalidID,
-//                        //..
-// };
-
 class ResponseAction {
    public:
     ResponseActionType type;
