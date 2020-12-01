@@ -228,7 +228,7 @@ void Processor::printStats() {
         num_processes++;
         average_turnaround+=process.second.getTurnaround();
     }
-    cout<<"\nTurnaround promedio: "<<(average_turnaround/num_processes);
+    cout<<"\nTurnaround promedio: "<<(average_turnaround/num_processes)<<endl;
 
     for(auto &process: processes)
     {
