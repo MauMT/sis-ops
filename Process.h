@@ -70,7 +70,7 @@ class Process {
     /**
      * Incrementa en 1 el número de page faults del proceso
      */
-    void incrementPageFaults() { page_faults++; };
+    void incrementPageFaults();
 
     /**
      * Regresa la pagina del proceso donde se encuentra su direccion virtual virtual_address.
