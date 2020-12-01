@@ -2,6 +2,7 @@
 
 #include <vector>
 
+#include "Clock.h"
 #include "Page.h"
 
 class Process {

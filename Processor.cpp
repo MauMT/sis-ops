@@ -88,7 +88,7 @@ void Processor::accessAddress(AccessAddressQuery query) {
     // Ubicamos el proceso.
     Process process = processes[process_id];
 
-    if (process.isActive()) {
+    if (!process.isActive()) {
         // Si ya no esta activo, nos salimos de la funcion para que no ocurran cosas extrañas.
 
         // Error

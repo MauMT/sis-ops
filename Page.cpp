@@ -53,3 +53,7 @@ void Page::setInMemory(bool in_memory) {
 void Page::setSwapAddress(int swap_address) {
     this->swap_address = swap_address;
 }
+
+int Page::getSwapAddress() {
+    return swap_address;
+}
