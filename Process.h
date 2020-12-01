@@ -30,6 +30,12 @@ class Process {
     bool isActive();
 
     /**
+     * Indica que el proceso ya no está activo
+     * 
+     */
+    void setInactive();
+
+    /**
      * Regresa el valor del timestamp al inicio del proceso
      * @return timestamp al inicio del proceso 
      */

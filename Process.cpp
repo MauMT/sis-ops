@@ -27,6 +27,10 @@ bool Process::isActive() {
     return is_active;
 }
 
+void Process::setInactive() {
+    is_active = false;
+}
+
 int Process::getInitTimeStamp() {
     return init_timestamp;
 }

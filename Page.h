@@ -80,5 +80,16 @@ class Page {
      */
     bool holdsVirtualAddress(int virtual_address);
 
+    /**
+     * Asigna el numero de marco de pagina en el area de swap.
+     * @param swap_address el nuevo swap address.
+     */
+    void setSwapAddress(int swap_address);
+
+    /**
+     * Regresa numero de marco de pagina en el area de swap.
+     * @return el numero de marco de pagina en el area de swap.
+     */
+    int getSwapAddress();
     static const int page_size = 16;
 };
