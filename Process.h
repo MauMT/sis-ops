@@ -80,4 +80,10 @@ class Process {
      * nullptr si no se encontro.
      */
     Page* getPageByVirtualAddress(int virtual_address);
+
+    /**
+     * 
+     * @return el ID del proceso
+     */
+    int getProcessId();
 };

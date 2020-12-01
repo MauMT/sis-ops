@@ -51,3 +51,7 @@ int Process::getPageFaults() {
 int Process::getTurnaround() {
     return end_timestamp - init_timestamp;
 }
+
+int Process::getProcessId(){
+    return id;
+}

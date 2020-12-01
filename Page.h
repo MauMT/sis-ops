@@ -8,7 +8,7 @@ class Page {
     bool in_memory;
     int frame_number;  //era real_address_start
     int page_number;   // era virtual_address_start
-    int swap_address;
+    int swap_address; //indice del vector de swaparea
     int process_id;
     int last_use;
 

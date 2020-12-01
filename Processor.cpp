@@ -277,13 +277,54 @@ void Processor::deallocateProcess(DeallocateProcessQuery query) {
         std::cout << p.first << '-' << p.second;
         std::cout << (i == swaparea_pages_ranges.size() - 2 ? " y " : (i == swaparea_pages_ranges.size() - 1 ? " del area de swapping\n" : " "));
     }
+
 }
 
 void Processor::reinitialize() {
+    printStats();
+    memory = Memory(2048);
+    swap_area = SwapArea();
+    input_handler = InputHandler(this);
+    swapper = new FIFOSwapper(&memory, &swap_area);
+    swap_in_count = 0;
+    swap_out_count = 0;
 }
 
 void Processor::exit() {
+
 }
 
 void Processor::printStats() {
+    /*
+    - turnaround time de cada proceso que se consideró, desde que se
+    comienza a cargar un proceso (P) hasta que se terminan de liberar todas
+    sus páginas (L). Puedes obtenerlo por medio de una diferencia de
+    timestamps.
+    - turnaround promedio.
+    - número de page faults por proceso. Recuerda que un page fault ocurre
+    únicamente cuando un marco de página necesario no se encuentra en
+    memoria real. → En esta versión del manejador de memoria virtual, el
+    comando P (cargar un proceso completo a memoria real) no produce page
+    faults. Los habría si es necesario reemplazar páginas de memoria real para
+    hacerle espacio al proecso. ←
+    - número total de operaciones de swap-out y de swap-in que fueron
+    necesarias por cualquier motivo 
+    */
+     
+      double num_processes = 0.0;
+      double average_turnaround;
+    for(auto &process: processes)
+    {
+        cout<<"Turnaround time del Proceso "<<process.second.getProcessId()<<": "<<process.second.getTurnaround()<<endl;
+        num_processes++;
+        average_turnaround+=process.second.getTurnaround();
+    }
+    cout<<"\nTurnaround promedio: "<<(average_turnaround/num_processes);
+
+    for(auto &process: processes)
+    {
+        cout<<"Page faults del Proceso "<<process.second.getProcessId()<<": "<<process.second.getPageFaults()<<endl;
+    }
+    cout<<"Operaciones de swap in: "<<swap_in_count<<endl;
+    cout<<"Operaciones de swap out: "<<swap_out_count<<endl;
 }

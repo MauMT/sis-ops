@@ -24,11 +24,24 @@ class InputHandler {
      */
     ResponseAction *parse(std::string line);
 
-    // TODO: usar formato JavaDoc (/**)
-    //función que borra todos los espacios vacíos antes de alguno de los caracteres de los comandos
+    /**
+     *Borra todos los espacios vacíos antes de alguno de los caracteres de los comandos 
+     * 
+     *@param string por modificar  
+     */
     friend void lTrim(std::string &s);
-    //función que elimina los espacios vacío y el primer caracter del comando, deja a los valores enteros listos para ser leídos
+
+    /**
+     * Elimina los espacios vacíos y el primer caracter del comando, deja a los valores enteros listos para ser leídos
+     * 
+     * @param string por modificar
+     */
     friend void firstCharDel(std::string &s);
-    //función que borra todos los espacios vacíos después del último caracter alfanumérico de un comando
+   
+    /**
+     * Borra todos los espacios vacíos después del último caracter alfanumérico de un comando
+     * 
+     * @param string por modificar
+     */
     friend void rTrim(std::string &s);
 };
