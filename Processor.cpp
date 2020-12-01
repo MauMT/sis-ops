@@ -313,6 +313,11 @@ void Processor::reinitialize() {
     swap_out_count = 0;
 }
 
+void Processor::exit(){
+   for (auto& process : processes) { 
+   process.second.setInactive();
+   }
+}
 
 void Processor::printStats() {
     /*
@@ -339,8 +344,11 @@ void Processor::printStats() {
         num_processes++;
         average_turnaround += process.second.getTurnaround();
     }
-    cout << "\nTurnaround promedio: " << (average_turnaround / num_processes) / 1000 << "s" << endl;
 
+    
+    cout << "\nTurnaround promedio: " << (average_turnaround / num_processes);
+
+    cout << "\nTurnaround promedio: " << (average_turnaround / num_processes) / 1000 << "s" << endl;
 
     for (auto& process : processes) {
         cout << "Page faults del Proceso " << process.second.getProcessId() << ": " << process.second.getPageFaults() << endl;
