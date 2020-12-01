@@ -13,6 +13,7 @@ Processor::Processor() {
     swap_area = SwapArea();
     input_handler = InputHandler(this);
     swapper = new FIFOSwapper(&memory, &swap_area);
+    // swapper = new LRUSwapper(&memory, &swap_area);
     swap_in_count = 0;
     swap_out_count = 0;
 }
@@ -34,22 +35,16 @@ void Processor::exec(string filename) {
         ResponseAction* action = input_handler.parse(line);
         switch (action->type) {
             case ResponseActionType::AllocateProcessQuery: {
-                // AllocateProcessQuery query = castResponse<AllocateProcessQuery>(action);
-                // allocateProcess(query);
-
-                cout << "ALLOCATE\n";
+                AllocateProcessQuery query = castResponse<AllocateProcessQuery>(action);
+                allocateProcess(query);
             } break;
             case ResponseActionType::AccessAddressQuery: {
-                // AccessAddressQuery query = castResponse<AccessAddressQuery>(action);
-                // accessAddress(query);
-
-                cout << "ACCESS\n";
+                AccessAddressQuery query = castResponse<AccessAddressQuery>(action);
+                accessAddress(query);
             } break;
             case ResponseActionType::DeallocateProcessQuery: {
-                // DeallocateProcessQuery query = castResponse<DeallocateProcessQuery>(action);
-                // deallocateProcess(query);
-
-                cout << "DEALLOCATE\n";
+                DeallocateProcessQuery query = castResponse<DeallocateProcessQuery>(action);
+                deallocateProcess(query);
             } break;
             case ResponseActionType::CommentQuery: {
                 CommentQuery comment = castResponse<CommentQuery>(action);
@@ -58,11 +53,10 @@ void Processor::exec(string filename) {
             } break;
             case ResponseActionType::FinishQuery:
                 reinitialize();
-                cout << "RESTART\n";
                 break;
             case ResponseActionType::ExitQuery:
-                exit();
-                cout << "EXIT\n";
+
+                printStats();
                 break;
             case ResponseActionType::Error: {
                 Error error = castResponse<Error>(action);
@@ -83,26 +77,27 @@ void Processor::accessAddress(AccessAddressQuery query) {
     int modify = query.modify;
 
     // Tenemos que desplegar el comando.
-    cout << "Obtener la dirección real correspondiente a la dirección virtual " << virtual_address << " del proceso " << process_id << '\n';
+    cout << "Obtener la direccion real correspondiente a la direccion virtual " << virtual_address << " del proceso " << process_id << '\n';
 
     // Ubicamos el proceso.
-    Process process = processes[process_id];
+    Process& process = processes[process_id];
 
     if (!process.isActive()) {
         // Si ya no esta activo, nos salimos de la funcion para que no ocurran cosas extrañas.
 
         // Error
-        std::cout << "Proceso " << process_id << " no está activo." << '\n';
+        std::cout << "Proceso " << process_id << " no esta activo." << '\n';
         return;
     }
 
     // Obtenemos las paginas del proceso.
-    std::vector<Page> pages = process.getPages();
-
+    std::vector<Page>& pages = process.getPages();
     int process_page_number = -1;
 
     // Localizar donde esta la pagina con esa dirrecion del proceso.
-    for (Page& page : pages) {
+    for (int i = 0; i < pages.size(); i++) {
+        Page& page = pages[i];
+        page.holdsVirtualAddress(virtual_address);
         if (page.holdsVirtualAddress(virtual_address)) {
             // Hemos encontrado la pagina que tiene la direccion virtual del proceso.
             process_page_number = page.getPageNumber();
@@ -124,7 +119,7 @@ void Processor::accessAddress(AccessAddressQuery query) {
     // y un swap out en caso de que la memoria esté llena.
     if (!page.isInMemory()) {
         // No está en memoria.
-
+        process.incrementPageFaults();
         // Tenemos que ver si la memoria está llena antes de hacer el swap in.
         if (memory.getFreeFrames() <= 0) {
             // Memoria llena. Es necesario un swap out.
@@ -142,24 +137,29 @@ void Processor::accessAddress(AccessAddressQuery query) {
     page.setLastUse(Clock::time);
     Clock::time += 0.1 * 1000;
 
+    if (modify) {
+        cout << "Pagina " << page.getPageNumber() << " del proceso " << page.getProcessId() << " modificada.\n";
+    }
+
     // Obtenemos el offset y luego la direccion real.
     int offset = virtual_address - page.getVirtualAddressStart();
     int real_address = page.getFrameNumber() * 16 + offset;
+
     // Desplegamos el resultado.
-    cout << "Dirección virtual: " << virtual_address << ". Dirección real: " << real_address << '\n';
+    cout << "Direccion virtual: " << virtual_address << ". Direccion real: " << real_address << "\n\n";
 }
 
 void Processor::allocateProcess(AllocateProcessQuery query) {
     cout << "Asignar " << query.bytes << " bytes al proceso " << query.process_id << endl;
 
     // Se crea el nuevo proceso especificado
-    Process new_process = Process(query.process_id, query.bytes, Clock::time);
+    processes[query.process_id] = Process(query.process_id, query.bytes, Clock::time);
+    Process& new_process = processes[query.process_id];
 
-    auto pages = new_process.getPages();
-
+    vector<Page>& pages = new_process.getPages();
     // Guarda los numeros de frames usados para desplegarlos posteriormente
     vector<int> frames_used;
-    for (auto& page : pages) {
+    for (Page& page : pages) {
         if (memory.getFreeFrames() <= 0) {
             swapper->swapOut();
             swap_out_count++;
@@ -176,7 +176,7 @@ void Processor::allocateProcess(AllocateProcessQuery query) {
     vector<string> ranges;
     int from = 0, to = 0;
     for (int i = 0; i < frames_used.size(); i++) {
-        if (i != 0 && frames_used[i] != frames_used[i - 1]) {
+        if (i != 0 && frames_used[i] != frames_used[i - 1] + 1) {
             to = i - 1;
             if (to == from)
                 ranges.push_back(to_string(frames_used[from]));
@@ -184,14 +184,23 @@ void Processor::allocateProcess(AllocateProcessQuery query) {
                 ranges.push_back(to_string(frames_used[from]) + '-' + to_string(frames_used[to]));
             from = i;
             to = i;
+        } else {
+            to = i;
+            if (i == frames_used.size() - 1) {
+                if (to == from)
+                    ranges.push_back(to_string(frames_used[from]));
+                else
+                    ranges.push_back(to_string(frames_used[from]) + '-' + to_string(frames_used[to]));
+            }
         }
     }
 
-    cout << "Se asignaron los marcos de página ";
+    cout << "Se asignaron los marcos de pagina ";
     for (int i = 0; i < ranges.size(); i++) {
         cout << ranges[i] << (i == ranges.size() - 1 ? " " : ", ");
     }
-    cout << "al proceso " << query.process_id;
+    cout << "al proceso " << query.process_id << endl
+         << endl;
 }
 
 void Processor::deallocateProcess(DeallocateProcessQuery query) {
@@ -199,25 +208,25 @@ void Processor::deallocateProcess(DeallocateProcessQuery query) {
     int process_id = query.process_id;
 
     // Obtenemos el proceso.
-    Process process_to_deallocate = processes[process_id];
+    Process& process_to_deallocate = processes[process_id];
 
     // Revisamos que el proceso esté activo para evitar errores.
     if (!process_to_deallocate.isActive()) {
         return;
     }
 
-    std::cout << "Liberar los marcos de página ocupados por el proceso " << process_id << '\n';
+    std::cout << "Liberar los marcos de pagina ocupados por el proceso " << process_id << '\n';
 
     // Obtenemos todas las paginas del proceso, ya sea que esten en memoria o en el area de swap.
-    std::vector<Page> pages = process_to_deallocate.getPages();
+    std::vector<Page>& pages = process_to_deallocate.getPages();
 
     Clock::time += 100 * pages.size();
 
     // Iteramos sobre las paginas del proceso.
     // Las eliminamos dependiendo si estan en memoria o en el area de swap.
 
-    std::vector<bool> frames_deallocated(128);
-    std::vector<bool> swaparea_pages_deallocated(128);
+    std::vector<bool> frames_deallocated(128, 0);
+    std::vector<bool> swaparea_pages_deallocated(128, 0);
 
     for (Page& page : pages) {
         if (page.isInMemory()) {
@@ -231,6 +240,8 @@ void Processor::deallocateProcess(DeallocateProcessQuery query) {
             swaparea_pages_deallocated[swap_address];
             swap_area.removePage(&page);
         }
+
+        Clock::time += 100;
     }
 
     std::vector<pair<int, int>> frames_ranges;
@@ -238,12 +249,14 @@ void Processor::deallocateProcess(DeallocateProcessQuery query) {
         if (frames_deallocated[i]) {
             int start = i, end = i;
             for (int j = i + 1; j < 128; j++) {
-                if (!frames_deallocated[j]) {
-                    end = j - 1;
+                if (frames_deallocated[j]) {
+                    end = j;
+                } else {
                     break;
                 }
             }
             frames_ranges.push_back({start, end});
+            i = end + 1;
         }
     }
 
@@ -252,12 +265,14 @@ void Processor::deallocateProcess(DeallocateProcessQuery query) {
         if (swaparea_pages_deallocated[i]) {
             int start = i, end = i;
             for (int j = i + 1; j < 256; j++) {
-                if (!swaparea_pages_deallocated[j]) {
-                    end = j - 1;
+                if (swaparea_pages_deallocated[j]) {
+                    end = j;
+                } else {
                     break;
                 }
             }
             swaparea_pages_ranges.push_back({start, end});
+            i = end + 1;
         }
     }
 
@@ -269,30 +284,35 @@ void Processor::deallocateProcess(DeallocateProcessQuery query) {
     std::cout << "Se liberan los marcos de memoria real: ";
     for (int i = 0; i < frames_ranges.size(); i++) {
         pair<int, int> p = frames_ranges[i];
-        std::cout << p.first << '-' << p.second;
+        if (p.first == p.second)
+            std::cout << p.first;
+        else
+            std::cout << p.first << '-' << p.second;
         std::cout << (i == frames_ranges.size() - 2 ? " y " : (i == frames_ranges.size() - 1 ? "\n" : " "));
     }
 
     std::cout << "Se liberan los marcos ";
     for (int i = 0; i < swaparea_pages_ranges.size(); i++) {
         pair<int, int> p = swaparea_pages_ranges[i];
-        std::cout << p.first << '-' << p.second;
+        if (p.first == p.second)
+            std::cout << p.first;
+        else
+            std::cout << p.first << '-' << p.second;
         std::cout << (i == swaparea_pages_ranges.size() - 2 ? " y " : (i == swaparea_pages_ranges.size() - 1 ? " del area de swapping\n" : " "));
     }
+    cout << endl;
 }
 
 void Processor::reinitialize() {
     printStats();
+    delete swapper;
     memory = Memory(2048);
     swap_area = SwapArea();
-    input_handler = InputHandler(this);
     swapper = new FIFOSwapper(&memory, &swap_area);
     swap_in_count = 0;
     swap_out_count = 0;
 }
 
-void Processor::exit() {
-}
 
 void Processor::printStats() {
     /*
@@ -314,15 +334,19 @@ void Processor::printStats() {
     double num_processes = 0.0;
     double average_turnaround;
     for (auto& process : processes) {
-        cout << "Turnaround time del Proceso " << process.second.getProcessId() << ": " << process.second.getTurnaround() << endl;
+
+        cout << "Turnaround time del Proceso " << process.second.getProcessId() << ": " << process.second.getTurnaround() / 1000 << "s" << endl;
         num_processes++;
         average_turnaround += process.second.getTurnaround();
     }
-    cout << "\nTurnaround promedio: " << (average_turnaround / num_processes);
+    cout << "\nTurnaround promedio: " << (average_turnaround / num_processes) / 1000 << "s" << endl;
+
 
     for (auto& process : processes) {
         cout << "Page faults del Proceso " << process.second.getProcessId() << ": " << process.second.getPageFaults() << endl;
     }
     cout << "Operaciones de swap in: " << swap_in_count << endl;
     cout << "Operaciones de swap out: " << swap_out_count << endl;
+    cout << endl;
+
 }

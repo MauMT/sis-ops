@@ -1,5 +1,7 @@
 #include "Frame.h"
 
+#include <iostream>
+using namespace std;
 Frame::Frame() {
     free = true;
     page = nullptr;
@@ -29,7 +31,7 @@ void Frame::setFree(bool free) {
     this->free = free;
     if (free && this->page) {
         this->page->setInMemory(false);
-        setPage(nullptr);
+        this->page = nullptr;
     }
 }
 
