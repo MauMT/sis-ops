@@ -80,7 +80,7 @@ void Processor::accessAddress(AccessAddressQuery query) {
     cout << "Obtener la direccion real correspondiente a la direccion virtual " << virtual_address << " del proceso " << process_id << '\n';
 
     // Ubicamos el proceso.
-    Process process = processes[process_id];
+    Process& process = processes[process_id];
 
     if (!process.isActive()) {
         // Si ya no esta activo, nos salimos de la funcion para que no ocurran cosas extrañas.
@@ -282,16 +282,20 @@ void Processor::deallocateProcess(DeallocateProcessQuery query) {
     std::cout << "Se liberan los marcos de memoria real: ";
     for (int i = 0; i < frames_ranges.size(); i++) {
         pair<int, int> p = frames_ranges[i];
-        if (p.first == p.second) std::cout << p.first;
-        else std::cout << p.first << '-' << p.second;
+        if (p.first == p.second)
+            std::cout << p.first;
+        else
+            std::cout << p.first << '-' << p.second;
         std::cout << (i == frames_ranges.size() - 2 ? " y " : (i == frames_ranges.size() - 1 ? "\n" : " "));
     }
 
     std::cout << "Se liberan los marcos ";
     for (int i = 0; i < swaparea_pages_ranges.size(); i++) {
         pair<int, int> p = swaparea_pages_ranges[i];
-        if (p.first == p.second) std::cout << p.first;
-        else std::cout << p.first << '-' << p.second;
+        if (p.first == p.second)
+            std::cout << p.first;
+        else
+            std::cout << p.first << '-' << p.second;
         std::cout << (i == swaparea_pages_ranges.size() - 2 ? " y " : (i == swaparea_pages_ranges.size() - 1 ? " del area de swapping\n" : " "));
     }
     cout << endl;
@@ -327,11 +331,11 @@ void Processor::printStats() {
     double num_processes = 0.0;
     double average_turnaround;
     for (auto& process : processes) {
-        cout << "Turnaround time del Proceso " << process.second.getProcessId() << ": " << process.second.getTurnaround() << endl;
+        cout << "Turnaround time del Proceso " << process.second.getProcessId() << ": " << process.second.getTurnaround() / 1000 << "s" << endl;
         num_processes++;
         average_turnaround += process.second.getTurnaround();
     }
-    cout << "\nTurnaround promedio: " << (average_turnaround / num_processes) << endl;
+    cout << "\nTurnaround promedio: " << (average_turnaround / num_processes) / 1000 << "s" << endl;
 
     for (auto& process : processes) {
         cout << "Page faults del Proceso " << process.second.getProcessId() << ": " << process.second.getPageFaults() << endl;

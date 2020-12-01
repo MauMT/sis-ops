@@ -8,5 +8,5 @@ using namespace std;
 
 int main() {
     Processor processor;
-    processor.exec("input.txt");
+    processor.exec("archivop.txt");
 }
